@@ -2,6 +2,8 @@ package codeFighter.core;
 
 import codeFighter.exceptions.FighterException;
 import codeFighter.utils.FighterMethod;
+import codeFighter.utils.FighterTest;
+import codeFighter.utils.FighterTestResult;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +15,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -65,7 +69,20 @@ public class Fighter {
         }
     }
 
-    public Object executeForResult() throws FighterException {
+    public List<FighterTestResult> runTests() throws FighterException {
+        List<FighterTestResult> testResults = new ArrayList<>();
+        for (FighterTest test : fighterMethod.getTests()) {
+            Object actual = executeForResult(test.getParameterValues());
+            FighterTestResult result = new FighterTestResult(test.getParameterValues(),
+                    test.getExpectedReturnValue(),
+                    actual,
+                    test.isHidden());
+            testResults.add(result);
+        }
+        return testResults;
+    }
+
+    public Object executeForResult(Object... parameterValues) throws FighterException {
         try {
             File file = new File("Algorithm_" + userID + ".jar");
 
@@ -77,7 +94,7 @@ public class Fighter {
             Object instance = cls.newInstance();
             Method metodo = cls.getMethod(fighterMethod.getMethodName(), fighterMethod.getParameterTypes());
 
-            return metodo.invoke(instance, fighterMethod.getParameterValues());
+            return metodo.invoke(instance, parameterValues);
         } catch (MalformedURLException ex) {
             throw new FighterException("There was an error getting the method's .jar file", ex);
         } catch (ClassNotFoundException ex) {

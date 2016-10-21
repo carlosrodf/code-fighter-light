@@ -11,11 +11,11 @@ public class FighterTest {
 
     private final boolean hidden;
     
-    public static FighterTest createHiddenTest(Object[] parameterValues, Object expectedReturnValue){
+    public static FighterTest createHiddenTest(Object expectedReturnValue,Object... parameterValues){
         return new FighterTest(parameterValues,expectedReturnValue,true);
     }
     
-    public static FighterTest createPublicTest(Object[] parameterValues, Object expectedReturnValue){
+    public static FighterTest createPublicTest(Object expectedReturnValue,Object... parameterValues){
         return new FighterTest(parameterValues,expectedReturnValue,false);
     }
 
@@ -35,6 +35,10 @@ public class FighterTest {
         this.parameterValues = parameterValues;
         this.expectedReturnValue = expectedReturnValue;
         this.hidden = hidden;
+    }
+
+    public Object getExpectedReturnValue() {
+        return expectedReturnValue;
     }
     
 }
