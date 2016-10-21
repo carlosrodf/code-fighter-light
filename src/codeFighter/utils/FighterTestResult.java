@@ -25,11 +25,11 @@ public class FighterTestResult {
     }
 
     public Object getExpected() {
-        return (hidden) ? " " : expected;
+        return (hidden) ? "***" : expected;
     }
 
     public Object getActual() {
-        return (hidden) ? " " : actual;
+        return (hidden) ? "***" : actual;
     }
 
     public boolean isPassed() {
