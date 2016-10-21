@@ -1,43 +1,59 @@
 package codeFighter.utils;
 
+import codeFighter.exceptions.FighterException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author carlosrodf
  */
 public class FighterMethod {
-    
+
     private final String methodName;
     private final String methodCode;
     private Class<?>[] parameterTypes;
-    private Object[] parameterValues;
-    
-    public FighterMethod(String methodCode, String methodName){
+
+    private final List<FighterTest> tests;
+
+    public FighterMethod(String methodName, String methodCode) {
         this.methodCode = methodCode;
         this.methodName = methodName;
         this.parameterTypes = null;
-        this.parameterValues = null;
+        this.tests = new ArrayList<>();
     }
-    
-    public boolean isValid(){
-        if (!methodName.equals("") && !methodCode.equals("")){
-            if(parameterTypes == null && parameterValues == null){
-                return true;
-            }else if(parameterTypes == null || parameterValues == null){
-                return false;
-            }else{
-                return parameterTypes.length == parameterValues.length;
-            }
-        }else{
-            return false;
+
+    public boolean isValid() {
+        return !methodName.equals("") && !methodCode.equals("") && parameterTypes != null;
+    }
+
+    public void addTest(FighterTest test) throws FighterException {
+        if (test.getParameterValues().length == this.parameterTypes.length) {
+            this.tests.add(test);
+        } else {
+            throw new FighterException("Invalid number of parameters");
         }
     }
-    
-    public void setParameterTypes(Class<?>... parameterTypes){
-        this.parameterTypes = parameterTypes;
+
+    public void addTest(boolean hidden, Object expectedReturnValue, Object... parameterValues) throws FighterException {
+        if (parameterValues.length == parameterTypes.length) {
+            if (hidden) {
+                this.tests.add(FighterTest.createHiddenTest(parameterValues, expectedReturnValue));
+            } else {
+                this.tests.add(FighterTest.createPublicTest(parameterValues, expectedReturnValue));
+            }
+        } else {
+            throw new FighterException("Invalid number of parameters");
+        }
+
     }
-    
-    public void setParameterValues(Object... parameterValues){
-        this.parameterValues = parameterValues;
+
+    public void removeAllTests() {
+        this.tests.clear();
+    }
+
+    public void setParameterTypes(Class<?>... parameterTypes) {
+        this.parameterTypes = parameterTypes;
     }
 
     public String getMethodName() {
@@ -52,8 +68,8 @@ public class FighterMethod {
         return parameterTypes;
     }
 
-    public Object[] getParameterValues() {
-        return parameterValues;
+    public List<FighterTest> getTests() {
+        return tests;
     }
-    
+
 }
