@@ -31,6 +31,7 @@ public class Fighter {
     public Fighter(String userID) {
         this.userID = userID;
         this.TEMPLATE_PATH = "codeFighter/resources/";
+        this.fighterMethod = null;
     }
 
     public void loadMethodToTest(FighterMethod fighterMethod) throws FighterException {
@@ -38,6 +39,14 @@ public class Fighter {
             this.fighterMethod = fighterMethod;
         } else {
             throw new FighterException("The method is not valid. Check if all the method's parameters are set");
+        }
+    }
+
+    public void updateTestCode(String newCode) throws FighterException {
+        if (fighterMethod != null) {
+            this.fighterMethod.setMethodCode(newCode);
+        }else{
+            throw new FighterException("A FighterMethod has not been loaded to this fighter");
         }
     }
 

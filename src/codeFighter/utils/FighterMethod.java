@@ -11,7 +11,7 @@ import java.util.List;
 public class FighterMethod {
 
     private final String methodName;
-    private final String methodCode;
+    private String methodCode;
     private Class<?>[] parameterTypes;
 
     private final List<FighterTest> tests;
@@ -70,6 +70,10 @@ public class FighterMethod {
 
     public List<FighterTest> getTests() {
         return tests;
+    }
+
+    public void setMethodCode(String methodCode) {
+        this.methodCode = methodCode;
     }
 
 }
