@@ -38,9 +38,9 @@ public class FighterMethod {
     public void addTest(boolean hidden, Object expectedReturnValue, Object... parameterValues) throws FighterException {
         if (parameterValues.length == parameterTypes.length) {
             if (hidden) {
-                this.tests.add(FighterTest.createHiddenTest(parameterValues, expectedReturnValue));
+                this.tests.add(FighterTest.createHiddenTest(expectedReturnValue, parameterValues));
             } else {
-                this.tests.add(FighterTest.createPublicTest(parameterValues, expectedReturnValue));
+                this.tests.add(FighterTest.createPublicTest(expectedReturnValue, parameterValues));
             }
         } else {
             throw new FighterException("Invalid number of parameters");

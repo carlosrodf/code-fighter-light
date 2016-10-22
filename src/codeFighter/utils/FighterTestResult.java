@@ -23,6 +23,20 @@ public class FighterTestResult {
     public Object[] getInputParams() {
         return (hidden) ? getDummyParams() : inputParams;
     }
+    
+    public String getFormatedInputParams(){
+        String formatedParams = "[";
+        if(this.hidden){
+            for(Object obj : getDummyParams()){
+                formatedParams += "***,";
+            }
+        }else{
+            for(Object obj : inputParams){
+                formatedParams += obj+",";
+            }
+        }
+        return formatedParams.substring(0,formatedParams.length()-1)+"]";
+    }
 
     public Object getExpected() {
         return (hidden) ? "***" : expected;
