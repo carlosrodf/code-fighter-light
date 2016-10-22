@@ -28,10 +28,14 @@ public class Fighter {
     private final String userID;
     private final String TEMPLATE_PATH;
 
+    private String algorithmTemplate;
+    private String manifestTemplate;
+
     public Fighter(String userID) {
         this.userID = userID;
         this.TEMPLATE_PATH = "codeFighter/resources/";
         this.fighterMethod = null;
+        initTemplate();
     }
 
     public void loadMethodToTest(FighterMethod fighterMethod) throws FighterException {
@@ -45,14 +49,14 @@ public class Fighter {
     public void updateTestCode(String newCode) throws FighterException {
         if (fighterMethod != null) {
             this.fighterMethod.setMethodCode(newCode);
-        }else{
+        } else {
             throw new FighterException("A FighterMethod has not been loaded to this fighter");
         }
     }
 
     public void createTempJavaFile() throws FighterException {
         try {
-            String code = getTemplateAsString("Algorithm.template");
+            String code = algorithmTemplate;
             code = code.replace("{{##:testCode:##}}", fighterMethod.getMethodCode());
             code = code.replace("{{##:className:##}}", "Algorithm_" + userID);
 
@@ -135,7 +139,7 @@ public class Fighter {
     }
 
     private void createManifestFile() throws IOException {
-        String code = getTemplateAsString("Manifest.template");
+        String code = manifestTemplate;
         code = code.replace("{{##:userID:##}}", userID);
 
         File file = new File("Manifest_" + userID + ".txt");
@@ -152,18 +156,17 @@ public class Fighter {
         p.waitFor();
     }
 
-    private String getTemplateAsString(String template) throws FileNotFoundException, IOException {
-        String content;
-        File file = new File(getClass().getClassLoader().getResource(TEMPLATE_PATH + template).getFile());
-        FileReader reader;
-
-        reader = new FileReader(file);
-        char[] chars = new char[(int) file.length()];
-        reader.read(chars);
-        content = new String(chars);
-        reader.close();
-
-        return content;
+    private void initTemplate() {
+        this.algorithmTemplate = "public class {{##:className:##}} {\n"
+                + "\n"
+                + "    public static void main(String[] args) {\n"
+                + "\n"
+                + "    }\n"
+                + "\n"
+                + "    {{##:testCode:##}}\n"
+                + "\n"
+                + "}";
+        this.manifestTemplate = "Main-Class: Algorithm_{{##:userID:##}}";
     }
 
 }
